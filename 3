@@ -1,0 +1,65 @@
+class InvalidShapeException extends Exception {
+    public InvalidShapeException(String msg) { super(msg); }
+}
+
+abstract class Shape {
+    public abstract double calculateArea(); // Abstract Method
+}
+
+
+class Circle extends Shape {
+    private double radius; // Encapsulation
+
+    public Circle(double radius) throws InvalidShapeException {
+        if (radius <= 0) throw new InvalidShapeException("Radius must be positive!");
+        this.radius = radius;
+    }
+
+    public double getRadius() { return radius; }
+
+    @Override
+    public double calculateArea() {
+        return Math.PI * radius * radius;
+    }
+}
+
+
+class Rectangle extends Shape {
+    private double length, width; // Encapsulation
+
+    public Rectangle(double length, double width) throws InvalidShapeException {
+        if (length <= 0 || width <= 0)
+            throw new InvalidShapeException("Length and Width must be positive!");
+        this.length = length;
+        this.width = width;
+    }
+
+    public double getLength() { return length; }
+    public double getWidth() { return width; }
+
+    @Override
+    public double calculateArea() {
+        return length * width;
+    }
+}
+
+
+public class ShapeTest {
+    public static void main(String[] args) {
+        try {
+            Shape c = new Circle(5);          // valid circle
+            Shape r = new Rectangle(4, 6);    // valid rectangle
+
+            System.out.println("Circle Area: " + c.calculateArea());
+            System.out.println("Rectangle Area: " + r.calculateArea());
+
+
+            Shape bad = new Circle(-3); // will throw exception
+            System.out.println("Bad Circle Area: " + bad.calculateArea());
+
+        } catch (InvalidShapeException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
