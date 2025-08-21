@@ -1,0 +1,76 @@
+class InvalidCourseDataException extends Exception {
+    public InvalidCourseDataException(String msg) { super(msg); }
+}
+
+abstract class Course {
+    private String courseCode;
+    private int credits;
+
+    public Course(String courseCode, int credits) throws InvalidCourseDataException {
+        if (courseCode == null || courseCode.isEmpty())
+            throw new InvalidCourseDataException("Course code cannot be empty!");
+        if (credits <= 0)
+            throw new InvalidCourseDataException("Credits must be positive!");
+        this.courseCode = courseCode;
+        this.credits = credits;
+    }
+
+    public String getCourseCode() { return courseCode; }
+    public int getCredits() { return credits; }
+
+
+    public abstract int calculateWorkload();
+}
+
+class TheoryCourse extends Course {
+    public TheoryCourse(String courseCode, int credits) throws InvalidCourseDataException {
+        super(courseCode, credits);
+    }
+
+    @Override
+    public int calculateWorkload() {
+        // Assume workload = credits * 3 hours per week
+        return getCredits() * 3;
+    }
+}
+
+class LabCourse extends Course {
+    public LabCourse(String courseCode, int credits) throws InvalidCourseDataException {
+        super(courseCode, credits);
+    }
+
+    @Override
+    public int calculateWorkload() {
+
+        return getCredits() * 4;
+    }
+}
+
+
+public class CourseTest {
+
+    public static void printWorkload(Course c) {
+        System.out.println("Course: " + c.getCourseCode() +
+                ", Credits: " + c.getCredits() +
+                ", Workload: " + c.calculateWorkload() + " hours/week");
+    }
+
+    public static void main(String[] args) {
+        try {
+            Course t = new TheoryCourse("CS101", 3);
+            Course l = new LabCourse("CS102L", 2);
+
+
+            printWorkload(t);
+            printWorkload(l);
+
+       
+            Course bad = new TheoryCourse("", -4);
+            printWorkload(bad);
+
+        } catch (InvalidCourseDataException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
