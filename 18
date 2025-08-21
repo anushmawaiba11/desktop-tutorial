@@ -1,0 +1,76 @@
+// Custom Exception
+class InvalidPolicyException extends Exception {
+    public InvalidPolicyException(String msg) {
+        super(msg);
+    }
+}
+
+// Abstract class
+abstract class InsurancePolicy {
+    private String policyHolder;
+    private int age;
+    private double coverage;
+
+    public InsurancePolicy(String policyHolder, int age, double coverage) {
+        this.policyHolder = policyHolder;
+        this.age = age;
+        this.coverage = coverage;
+    }
+
+    public String getPolicyHolder() { return policyHolder; }
+    public int getAge() { return age; }
+    public double getCoverage() { return coverage; }
+
+    public abstract double calculatePremium() throws InvalidPolicyException;
+}
+
+// Health Insurance
+class HealthInsurance extends InsurancePolicy {
+    public HealthInsurance(String name, int age, double coverage) {
+        super(name, age, coverage);
+    }
+    public double calculatePremium() throws InvalidPolicyException {
+        if(getAge() <= 0 || getCoverage() <= 0) throw new InvalidPolicyException("Invalid Age/Coverage!");
+        return getCoverage() * 0.05 + getAge() * 10;
+    }
+}
+
+// Life Insurance
+class LifeInsurance extends InsurancePolicy {
+    public LifeInsurance(String name, int age, double coverage) {
+        super(name, age, coverage);
+    }
+    public double calculatePremium() throws InvalidPolicyException {
+        if(getAge() <= 0 || getCoverage() <= 0) throw new InvalidPolicyException("Invalid Age/Coverage!");
+        return getCoverage() * 0.03 + (100 - getAge());
+    }
+}
+
+// Travel Insurance
+class TravelInsurance extends InsurancePolicy {
+    public TravelInsurance(String name, int age, double coverage) {
+        super(name, age, coverage);
+    }
+    public double calculatePremium() throws InvalidPolicyException {
+        if(getAge() <= 0 || getCoverage() <= 0) throw new InvalidPolicyException("Invalid Age/Coverage!");
+        return getCoverage() * 0.02 + getAge() * 5;
+    }
+}
+
+// Demo
+public class InsuranceDemo {
+    public static void main(String[] args) {
+        try {
+            InsurancePolicy p1 = new HealthInsurance("Alice", 30, 500000);
+            System.out.println("Health Premium: Rs " + p1.calculatePremium());
+
+            InsurancePolicy p2 = new LifeInsurance("Bob", 45, 1000000);
+            System.out.println("Life Premium: Rs " + p2.calculatePremium());
+
+            InsurancePolicy p3 = new TravelInsurance("Charlie", -25, 200000);
+            System.out.println("Travel Premium: Rs " + p3.calculatePremium());
+        } catch (InvalidPolicyException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
