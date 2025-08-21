@@ -1,0 +1,122 @@
+class InvalidAmountException extends Exception {
+    public InvalidAmountException(String message) {
+        super(message);
+    }
+}
+
+class InvalidCredentialException extends Exception {
+    public InvalidCredentialException(String message) {
+        super(message);
+    }
+}
+
+abstract class Payment {
+    private double amount;
+
+    public Payment(double amount) throws InvalidAmountException {
+        if (amount <= 0) {
+            throw new InvalidAmountException("Payment amount must be positive!");
+        }
+        this.amount = amount;
+    }
+
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public abstract void processPayment() throws InvalidCredentialException;
+}
+
+
+class CreditCard extends Payment {
+    private String cardNumber;
+
+    public CreditCard(double amount, String cardNumber) throws InvalidAmountException {
+        super(amount);
+        this.cardNumber = cardNumber;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    @Override
+    public void processPayment() throws InvalidCredentialException {
+        if (cardNumber == null || cardNumber.length() != 16) {
+            throw new InvalidCredentialException("Invalid Credit Card Number!");
+        }
+        System.out.println("Payment of Rs." + getAmount() + " processed through Credit Card ending with "
+                + cardNumber.substring(12));
+    }
+}
+
+
+class UPI extends Payment {
+    private String upiId;
+
+    public UPI(double amount, String upiId) throws InvalidAmountException {
+        super(amount);
+        this.upiId = upiId;
+    }
+
+    public String getUpiId() {
+        return upiId;
+    }
+
+    @Override
+    public void processPayment() throws InvalidCredentialException {
+        if (upiId == null || !upiId.contains("@")) {
+            throw new InvalidCredentialException("Invalid UPI ID!");
+        }
+        System.out.println("Payment of Rs." + getAmount() + " processed via UPI ID: " + upiId);
+    }
+}
+
+
+class NetBanking extends Payment {
+    private String userId;
+
+    public NetBanking(double amount, String userId) throws InvalidAmountException {
+        super(amount);
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    @Override
+    public void processPayment() throws InvalidCredentialException {
+        if (userId == null || userId.isEmpty()) {
+            throw new InvalidCredentialException("Invalid NetBanking User ID!");
+        }
+        System.out.println("Payment of Rs." + getAmount() + " processed through NetBanking for user " + userId);
+    }
+}
+
+
+public class OnlinePaymentGateway {
+    public static void main(String[] args) {
+        try {
+            Payment[] payments = {
+                    new CreditCard(5000, "1234567890123456"),
+                    new UPI(2000, "user@upi"),
+                    new NetBanking(10000, "user123")
+            };
+
+
+            for (Payment p : payments) {
+                p.processPayment();
+            }
+
+          
+            Payment invalid = new CreditCard(3000, "12345");
+            invalid.processPayment();
+
+        } catch (InvalidAmountException | InvalidCredentialException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
