@@ -1,0 +1,83 @@
+class InvalidCharacterException extends Exception {
+    public InvalidCharacterException(String msg) {
+        super(msg);
+    }
+}
+
+
+abstract class Character {
+    private String name;
+    private int health;
+    private String weapon;
+
+    public Character(String name, int health, String weapon) {
+        this.name = name;
+        this.health = health;
+        this.weapon = weapon;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public String getWeapon() {
+        return weapon;
+    }
+
+    public abstract void attack() throws InvalidCharacterException;
+}
+
+
+class Warrior extends Character {
+    public Warrior(String name, int health, String weapon) {
+        super(name, health, weapon);
+    }
+    public void attack() throws InvalidCharacterException {
+        if(getHealth() <= 0 || getWeapon() == null) throw new InvalidCharacterException("Invalid Warrior!");
+        System.out.println(getName() + " slashes with " + getWeapon());
+    }
+}
+
+
+class Mage extends Character {
+    public Mage(String name, int health, String weapon) {
+        super(name, health, weapon);
+    }
+    public void attack() throws InvalidCharacterException {
+        if(getHealth() <= 0) throw new InvalidCharacterException("Mage cannot attack with 0 health!");
+        System.out.println(getName() + " casts spell using " + getWeapon());
+    }
+}
+
+
+class Archer extends Character {
+    public Archer(String name, int health, String weapon) {
+        super(name, health, weapon);
+    }
+    public void attack() throws InvalidCharacterException {
+        if(getWeapon() == null) throw new InvalidCharacterException("Archer has no bow!");
+        System.out.println(getName() + " shoots arrow with " + getWeapon());
+    }
+}
+
+
+public class GameDemo {
+    public static void main(String[] args) {
+        try {
+            Character c1 = new Warrior("Thor", 100, "Sword");
+            c1.attack();
+
+            Character c2 = new Mage("Loki", 80, "Staff");
+            c2.attack();
+
+            Character c3 = new Archer("Robin", 0, "Bow");
+            c3.attack(); // throws exception
+        } catch (InvalidCharacterException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
