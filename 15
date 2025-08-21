@@ -1,0 +1,72 @@
+class BorrowLimitException extends Exception {
+    public BorrowLimitException(String msg) {
+        super(msg);
+    }
+}
+
+
+abstract class LibraryMember {
+    private String name;
+    private int borrowedBooks;
+
+    public LibraryMember(String name, int borrowedBooks) {
+        this.name = name;
+        this.borrowedBooks = borrowedBooks;
+    }
+
+    public String getName() { return name; }
+    public int getBorrowedBooks() { return borrowedBooks; }
+    public void setBorrowedBooks(int borrowedBooks) { this.borrowedBooks = borrowedBooks; }
+
+    public abstract void borrowBook() throws BorrowLimitException;
+}
+
+
+class Student extends LibraryMember {
+    public Student(String name, int borrowedBooks) {
+        super(name, borrowedBooks);
+    }
+    public void borrowBook() throws BorrowLimitException {
+        if(getBorrowedBooks() >= 3) throw new BorrowLimitException("Student limit reached!");
+        setBorrowedBooks(getBorrowedBooks() + 1);
+        System.out.println(getName() + " borrowed a book. Total: " + getBorrowedBooks());
+    }
+}
+
+
+class Teacher extends LibraryMember {
+    public Teacher(String name, int borrowedBooks) {
+        super(name, borrowedBooks);
+    }
+    public void borrowBook() throws BorrowLimitException {
+        if(getBorrowedBooks() >= 5) throw new BorrowLimitException("Teacher limit reached!");
+        setBorrowedBooks(getBorrowedBooks() + 1);
+        System.out.println(getName() + " borrowed a book. Total: " + getBorrowedBooks());
+    }
+}
+
+class Guest extends LibraryMember {
+    public Guest(String name, int borrowedBooks) {
+        super(name, borrowedBooks);
+    }
+    public void borrowBook() throws BorrowLimitException {
+        if(getBorrowedBooks() >= 1) throw new BorrowLimitException("Guest limit reached!");
+        setBorrowedBooks(getBorrowedBooks() + 1);
+        System.out.println(getName() + " borrowed a book. Total: " + getBorrowedBooks());
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            LibraryMember m1 = new Student("Alice", 2);
+            m1.borrowBook();
+            LibraryMember m2 = new Guest("Bob", 1);
+            m2.borrowBook(); // throws exception
+        } catch (BorrowLimitException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
