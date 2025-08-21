@@ -1,0 +1,118 @@
+class InvalidDimensionException extends Exception {
+    public InvalidDimensionException(String message) {
+        super(message);
+    }
+}
+
+
+abstract class Shape {
+    private String name;
+
+
+    public Shape(String name) {
+        this.name = name;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+
+    public abstract void draw();
+}
+
+
+class Circle extends Shape {
+    private double radius;
+
+    public Circle(double radius) throws InvalidDimensionException {
+        super("Circle");
+        if (radius <= 0) {
+            throw new InvalidDimensionException("Radius must be positive!");
+        }
+        this.radius = radius;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Circle with radius " + radius);
+    }
+}
+
+
+class Square extends Shape {
+    private double side;
+
+    public Square(double side) throws InvalidDimensionException {
+        super("Square");
+        if (side <= 0) {
+            throw new InvalidDimensionException("Side must be positive!");
+        }
+        this.side = side;
+    }
+
+    public double getSide() {
+        return side;
+    }
+
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Square with side " + side);
+    }
+}
+
+
+class Triangle extends Shape {
+    private double base, height;
+
+    public Triangle(double base, double height) throws InvalidDimensionException {
+        super("Triangle");
+        if (base <= 0 || height <= 0) {
+            throw new InvalidDimensionException("Base and height must be positive!");
+        }
+        this.base = base;
+        this.height = height;
+    }
+
+    public double getBase() {
+        return base;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Triangle with base " + base + " and height " + height);
+    }
+}
+
+
+public class ShapeDrawer {
+    public static void main(String[] args) {
+        try {
+            Shape[] shapes = {
+                    new Circle(5),
+                    new Square(4),
+                    new Triangle(3, 6)
+            };
+
+
+            for (Shape s : shapes) {
+                s.draw();
+            }
+
+         
+            Shape badCircle = new Circle(-2);
+
+        } catch (InvalidDimensionException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
