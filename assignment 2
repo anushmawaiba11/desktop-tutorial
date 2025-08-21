@@ -1,0 +1,55 @@
+class InvalidVehicleDataException extends Exception {
+    public InvalidVehicleDataException(String msg) { super(msg); }
+}
+
+abstract class Vehicle {
+    private String brand;
+    private int speed;
+
+    public Vehicle(String brand, int speed) throws InvalidVehicleDataException {
+        if (speed < 0) throw new InvalidVehicleDataException("Speed cannot be negative!");
+        this.brand = brand; this.speed = speed;
+    }
+
+    public String getBrand() { return brand; }
+    public int getSpeed() { return speed; }
+
+    public abstract void displayInfo();
+}
+
+class Car extends Vehicle {
+    private int doors;
+    public Car(String b, int s, int d) throws InvalidVehicleDataException {
+        super(b, s);
+        if (d <= 0) throw new InvalidVehicleDataException("Car must have doors!");
+        doors = d;
+    }
+    public void displayInfo() {
+        System.out.println("Car: " + getBrand() + ", Speed: " + getSpeed() + ", Doors: " + doors);
+    }
+}
+
+class Bike extends Vehicle {
+    private boolean gear;
+    public Bike(String b, int s, boolean g) throws InvalidVehicleDataException {
+        super(b, s);
+        gear = g;
+    }
+    public void displayInfo() {
+        System.out.println("Bike: " + getBrand() + ", Speed: " + getSpeed() + ", Gear: " + (gear?"Yes":"No"));
+    }
+}
+
+public class VehicleTest {
+    public static void main(String[] args) {
+        try {
+            Vehicle v1 = new Car("Toyota", 180, 4);
+            Vehicle v2 = new Bike("Yamaha", 120, true);
+            v1.displayInfo();
+            v2.displayInfo();
+        } catch (InvalidVehicleDataException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
