@@ -1,0 +1,101 @@
+// Custom Exception
+class LoginException extends Exception {
+    public LoginException(String message) {
+        super(message);
+    }
+}
+
+// Abstract Class
+abstract class User {
+    private String username;
+    private String password;
+
+    public User(String username, String password) throws LoginException {
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+            throw new LoginException("Username and password cannot be empty!");
+        }
+        this.username = username;
+        this.password = password;
+    }
+
+    // Encapsulation
+    public String getUsername() {
+        return username;
+    }
+
+    protected String getPassword() {
+        return password;
+    }
+
+    // Abstract Method
+    public abstract void login(String enteredPassword) throws LoginException;
+}
+
+// Admin
+class Admin extends User {
+    public Admin(String username, String password) throws LoginException {
+        super(username, password);
+    }
+
+    @Override
+    public void login(String enteredPassword) throws LoginException {
+        if (!getPassword().equals(enteredPassword)) {
+            throw new LoginException("Admin login failed: Incorrect password!");
+        }
+        System.out.println("Admin " + getUsername() + " logged in successfully.");
+    }
+}
+
+// Editor
+class Editor extends User {
+    public Editor(String username, String password) throws LoginException {
+        super(username, password);
+    }
+
+    @Override
+    public void login(String enteredPassword) throws LoginException {
+        if (!getPassword().equals(enteredPassword)) {
+            throw new LoginException("Editor login failed: Incorrect password!");
+        }
+        System.out.println("Editor " + getUsername() + " logged in successfully.");
+    }
+}
+
+// Viewer
+class Viewer extends User {
+    public Viewer(String username, String password) throws LoginException {
+        super(username, password);
+    }
+
+    @Override
+    public void login(String enteredPassword) throws LoginException {
+        if (!getPassword().equals(enteredPassword)) {
+            throw new LoginException("Viewer login failed: Incorrect password!");
+        }
+        System.out.println("Viewer " + getUsername() + " logged in successfully.");
+    }
+}
+
+// Test
+public class UserLoginSystem {
+    public static void main(String[] args) {
+        try {
+            User[] users = {
+                new Admin("admin1", "admin123"),
+                new Editor("editor1", "edit123"),
+                new Viewer("viewer1", "view123")
+            };
+
+            // Polymorphism
+            for (User u : users) {
+                u.login(u.getPassword()); // Correct login
+            }
+
+            // Test invalid login
+            users[0].login("wrongpass");
+
+        } catch (LoginException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
