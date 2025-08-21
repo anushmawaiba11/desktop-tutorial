@@ -1,0 +1,56 @@
+class InvalidCalculationException extends Exception {
+    public InvalidCalculationException(String msg) { super(msg); }
+}
+
+class Calculator {
+    private String calcName; 
+
+    public Calculator(String name) {
+        this.calcName = name;
+    }
+
+    public String getCalcName() {
+        return calcName;
+    }
+
+    public int add(int a, int b) { return a + b; }
+    public double add(double a, double b) { return a + b; }
+
+    public int subtract(int a, int b) { return a - b; }
+    public double subtract(double a, double b) { return a - b; }
+
+    public int multiply(int a, int b) { return a * b; }
+    public double multiply(double a, double b) { return a * b; }
+
+    public int divide(int a, int b) throws InvalidCalculationException {
+        if (b == 0) throw new InvalidCalculationException("Division by zero is not allowed!");
+        return a / b;
+    }
+
+    public double divide(double a, double b) throws InvalidCalculationException {
+        if (b == 0) throw new InvalidCalculationException("Division by zero is not allowed!");
+        return a / b;
+    }
+}
+
+public class CalculatorTest {
+    public static void main(String[] args) {
+        try {
+            Calculator c = new Calculator("MyCalculator");
+            System.out.println("Using " + c.getCalcName());
+
+            // Testing methods
+            System.out.println("Add: " + c.add(5, 10));
+            System.out.println("Subtract: " + c.subtract(20, 5));
+            System.out.println("Multiply: " + c.multiply(3, 4));
+            System.out.println("Divide: " + c.divide(10, 2));
+
+            // Invalid case: division by zero
+            System.out.println("Divide: " + c.divide(10, 0));
+
+        } catch (InvalidCalculationException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
