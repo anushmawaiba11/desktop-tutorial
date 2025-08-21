@@ -1,0 +1,72 @@
+class LoginException extends Exception {
+    public LoginException(String msg) {
+        super(msg);
+    }
+}
+
+abstract class Account {
+    private String username;
+    private String password;
+
+    public Account(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
+
+    public abstract void login() throws LoginException;
+}
+
+
+class GoogleAccount extends Account {
+    public GoogleAccount(String user, String pass) {
+        super(user, pass);
+    }
+    public void login() throws LoginException {
+        if(getUsername() == null || getPassword() == null) throw new LoginException("Null credentials!");
+        if(getPassword().equals("google123"))
+            System.out.println("Google Login Successful for " + getUsername());
+        else throw new LoginException("Google Login Failed!");
+    }
+}
+
+
+class FacebookAccount extends Account {
+    public FacebookAccount(String user, String pass) {
+        super(user, pass);
+    }
+    public void login() throws LoginException {
+        if(getPassword().equals("fb123"))
+            System.out.println("Facebook Login Successful for " + getUsername());
+        else throw new LoginException("Facebook Login Failed!");
+    }
+}
+
+
+class TwitterAccount extends Account {
+    public TwitterAccount(String user, String pass) {
+        super(user, pass);
+    }
+    public void login() throws LoginException {
+        if(getPassword().equals("tw123"))
+            System.out.println("Twitter Login Successful for " + getUsername());
+        else throw new LoginException("Twitter Login Failed!");
+    }
+}
+
+
+public class AccountDemo {
+    public static void main(String[] args) {
+        try {
+            Account g = new GoogleAccount("Alice", "google123");
+            g.login();
+
+            Account f = new FacebookAccount("Bob", "wrongpass");
+            f.login(); // throws exception
+        } catch (LoginException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
