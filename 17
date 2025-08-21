@@ -1,0 +1,68 @@
+class InvalidFareException extends Exception {
+    public InvalidFareException(String msg) {
+        super(msg);
+    }
+}
+
+
+class Transport {
+    private double distance;
+
+    public Transport(double distance) {
+        this.distance = distance;
+    }
+
+    public double getDistance() { return distance; }
+    public void setDistance(double distance) { this.distance = distance; }
+
+    public double calculateFare() throws InvalidFareException {
+        if(distance <= 0) throw new InvalidFareException("Invalid distance!");
+        return 0; // default
+    }
+}
+
+
+class Bus extends Transport {
+    public Bus(double distance) { super(distance); }
+    public double calculateFare() throws InvalidFareException {
+        if(getDistance() <= 0) throw new InvalidFareException("Invalid distance!");
+        return getDistance() * 5; // Rs 5 per km
+    }
+}
+
+// Train subclass
+class Train extends Transport {
+    public Train(double distance) { super(distance); }
+    public double calculateFare() throws InvalidFareException {
+        if(getDistance() <= 0) throw new InvalidFareException("Invalid distance!");
+        return getDistance() * 3; // Rs 3 per km
+    }
+}
+
+class Taxi extends Transport {
+    public Taxi(double distance) { super(distance); }
+    public double calculateFare() throws InvalidFareException {
+        if(getDistance() <= 0) throw new InvalidFareException("Invalid distance!");
+        return 50 + getDistance() * 10; // Base Rs 50 + Rs 10/km
+    }
+}
+
+
+public class TransportDemo {
+    public static void main(String[] args) {
+        try {
+            Transport t1 = new Bus(10);
+            System.out.println("Bus Fare: Rs " + t1.calculateFare());
+
+            Transport t2 = new Taxi(5);
+            System.out.println("Taxi Fare: Rs " + t2.calculateFare());
+
+            Transport t3 = new Train(-2); // throws exception
+            System.out.println("Train Fare: Rs " + t3.calculateFare());
+
+        } catch (InvalidFareException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
