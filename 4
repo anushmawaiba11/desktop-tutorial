@@ -1,0 +1,68 @@
+class InvalidPersonDataException extends Exception {
+    public InvalidPersonDataException(String msg) { super(msg); }
+}
+
+abstract class Person {
+    private String name;
+
+    public Person(String name) throws InvalidPersonDataException {
+        if (name == null || name.isEmpty())
+            throw new InvalidPersonDataException("Name cannot be null or empty!");
+        this.name = name;
+    }
+
+    public String getName() { return name; }
+
+    public abstract void displayInfo();
+}
+
+class Doctor extends Person {
+    private String specialization;
+
+    public Doctor(String name, String specialization) throws InvalidPersonDataException {
+        super(name);
+        if (specialization == null || specialization.isEmpty())
+            throw new InvalidPersonDataException("Specialization cannot be empty!");
+        this.specialization = specialization;
+    }
+
+    @Override
+    public void displayInfo() {
+        System.out.println("Doctor: " + getName() + ", Specialization: " + specialization);
+    }
+}
+
+class Patient extends Person {
+    private int age;
+
+    public Patient(String name, int age) throws InvalidPersonDataException {
+        super(name);
+        if (age <= 0) throw new InvalidPersonDataException("Age must be positive!");
+        this.age = age;
+    }
+
+    @Override
+    public void displayInfo() {
+        System.out.println("Patient: " + getName() + ", Age: " + age);
+    }
+}
+
+public class HospitalTest {
+    public static void main(String[] args) {
+        try {
+            Person d = new Doctor("Dr. Smith", "Cardiology");
+            Person p = new Patient("John Doe", 30);
+
+            d.displayInfo();
+            p.displayInfo();
+
+            // Invalid case (throws exception)
+            Person bad = new Patient("", -5);
+            bad.displayInfo();
+
+        } catch (InvalidPersonDataException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
