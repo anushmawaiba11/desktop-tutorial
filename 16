@@ -1,0 +1,90 @@
+class InvalidIncomeException extends Exception {
+    public InvalidIncomeException(String msg) {
+        super(msg);
+    }
+}
+
+abstract class TaxPayer {
+    private String name;
+    private double income;
+
+
+    public TaxPayer(String name, double income) throws InvalidIncomeException {
+        if (income < 0) {
+            throw new InvalidIncomeException("Income cannot be negative!");
+        }
+        this.name = name;
+        this.income = income;
+    }
+
+
+    public String getName() { return name; }
+    public double getIncome() { return income; }
+
+
+    public abstract double calculateTax();
+}
+
+// Subclass: Individual
+class Individual extends TaxPayer {
+    public Individual(String name, double income) throws InvalidIncomeException {
+        super(name, income);
+    }
+
+    @Override
+    public double calculateTax() {
+        return getIncome() * 0.1; // 10% tax
+    }
+}
+
+
+class Business extends TaxPayer {
+    public Business(String name, double income) throws InvalidIncomeException {
+        super(name, income);
+    }
+
+    @Override
+    public double calculateTax() {
+        return getIncome() * 0.25; // 25% tax
+    }
+}
+
+class Freelancer extends TaxPayer {
+    public Freelancer(String name, double income) throws InvalidIncomeException {
+        super(name, income);
+    }
+
+    @Override
+    public double calculateTax() {
+        return getIncome() * 0.15; // 15% tax
+    }
+}
+
+
+public class TaxCalculationSystem {
+    public static void main(String[] args) {
+        try {
+
+            TaxPayer[] payers = {
+                    new Individual("Anushma", 50000),
+                    new Business("TechCorp", 2000000),
+                    new Freelancer("Ramesh", 120000)
+            };
+
+
+            for (TaxPayer p : payers) {
+                System.out.println(p.getClass().getSimpleName() +
+                        " | Name: " + p.getName() +
+                        " | Income: " + p.getIncome() +
+                        " | Tax: " + p.calculateTax());
+            }
+
+
+            TaxPayer wrong = new Individual("TestUser", -10000);
+
+        } catch (InvalidIncomeException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
